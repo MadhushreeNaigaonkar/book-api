@@ -22,9 +22,9 @@ Book
     - to get all books ✅
     - to get specific books ✅
     - to get a list of books based on category ✅
-    - to get a list of books based on author -> [Task] 🔥
+    - to get a list of books based on author -> [Task] 🔥 -->done
  - POST
-    - to add new book
+    - to add new book -->Done
  - PUT
     - to update book details
     - to update/add new author
@@ -34,10 +34,10 @@ Book
 Authors
  - GET
     - to get all authors ✅
-    - to get specific author -> [Task] 🔥
+    - to get specific author -> [Task] -->Done
     - to get list of author based on a book
  - POST
-    - to add new author
+    - to add new author -->Done
     - to update/add new book
  - PUT
     - update author details
@@ -45,11 +45,11 @@ Authors
     - delete an author
 Publication
  - GET
-    - to get all publication -> [Task] 🔥
-    - to get specific publication -> [Task] 
-    - to get a list of publication based on a book. -> [Task] 🔥
+    - to get all publication -> [Task] 🔥 --> Done
+    - to get specific publication -> [Task]  -->Done
+    - to get a list of publication based on a book. -> [Task] 🔥 -->Sir dene wale
  - POST
-    - Add new publication
+    - Add new publication --> Done
  - PUT
     - update publication 
     - to update/add new book

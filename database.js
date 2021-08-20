@@ -2,7 +2,7 @@ let Book = [
     {
         ISBN: "12345ONE",
         title: "Getting started with MERN",
-        authors: [1, 2],
+        authors: [1],
         language: "en",
         pubDate: "2021-07-07",
         numOfPage: 225,
@@ -12,7 +12,7 @@ let Book = [
     {
         ISBN: "12345Two",
         title: "Getting started with Python",
-        authors: [1],
+        authors: [2],
         language: "en",
         pubDate: "2021-07-07",
         numOfPage: 225,
