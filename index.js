@@ -1,8 +1,16 @@
+require('dotenv').config();
 const express = require("express");
-
+const mongoose = require('mongoose');
 // database
 const Database = require("./database");
 
+
+
+mongoose.connect(process.env.MONGO_URI)
+.then(()=> console.log ("connection established"))
+.catch((err) => {
+    console.log(err);
+});
 // initialization
 const OurAPP = express();
 
@@ -140,8 +148,9 @@ OurAPP.get("/publication/p/:pid",(req,res)=>
 //Params:none
 //Body:book details
 OurAPP.post("/book/new",(req,res) =>{
-    console.log(req.body);
-    return res.json({message:'Book Added Successfully'});
+    const {newBook}= req.body;
+    Database.Book.push(newBook)
+    return res.json(Database.Book);
 });
 
 // Route:/author/new
@@ -152,8 +161,8 @@ OurAPP.post("/book/new",(req,res) =>{
 //Body:book details
 OurAPP.post("/author/new",(req,res) =>{
     const {newAuthor}=req.body;
-    console.log(newAuthor);
-    return res.json({message:'Author was added'});
+    Database.Author.push(newAuthor)
+    return res.json(Database.Author);
 });
 
 // Route:/publication/new
@@ -164,7 +173,300 @@ OurAPP.post("/author/new",(req,res) =>{
 //Body:book details
 OurAPP.post("/publication/new",(req,res) =>{
     const {newPublication}=req.body;
-    console.log(newPublication);
-    return res.json({message:'Publication was added'});
+    Database.Publication.push(newPublication)
+    return res.json(Database.Publication);
 });
+
+// Route:/book/update/:isbn
+// Des:To update in exisiting book
+// Access:Public
+// Method:put
+//Params:isbn
+//Body:updations
+
+OurAPP.put("/book/update/:isbn",(req,res) => {
+    const {updatedBook} = req.body;
+    const{isbn} =req.params;
+
+    Database.Book.forEach((book) =>{
+        if(book.ISBN===isbn){
+            book.title = updatedBook.title;
+            return ;
+        }
+        return book;
+
+    });
+
+    return res.json(Database.Book);
+});
+
+
+
+// Route       /book/updateAuthor/:isbn
+// Description update/add new author to a book
+// Access      Public
+// Paramteters isbn
+// Method      put
+OurAPP.put("/book/updateA/:isbn", (req, res) => {
+    const { newAuthor } = req.body;
+    const { isbn } = req.params;
+    // updating book database object
+    Database.Book.forEach((book) => {
+        // check if ISBN match
+        if (book.ISBN === isbn) {
+            // check if author already exist
+            if (!book.authors.includes(newAuthor)) {
+                // if not, then push new author
+               book.authors.push(newAuthor);
+               return book;
+            }
+            // else return
+            return book;
+        }
+        return book;
+    });
+    // updating author Database object
+    Database.Author.forEach((author) => {
+        // check if author id match
+        if (author.id === newAuthor) {
+            // check if book already exist
+            if (!author.books.includes(isbn)) {
+                // if not, then push new book
+                author.books.push(isbn);
+                return author;
+            }
+            // else return
+            return author;
+        }
+        return author;
+    });
+    return res.json({ book: Database.Book, author: Database.Author });
+});
+
+
+// Route:/author/update/:id
+// Des:To update in exisiting author
+// Access:Public
+// Method:put
+//Params:id
+//Body:updations
+
+OurAPP.put("/author/update/:id",(req,res)=>{
+    const {updatedAutor}=req.body;
+    const {id}=req.params;
+
+    Database.Author.forEach((author)=>{
+        if(author.id === parseInt(id)) {
+            author.name = updatedAutor.name;   
+            return;    
+         }
+            return author;
+    });
+
+    return res.json(Database.Author);
+});
+
+// Route:/publication/update/:id
+// Des:To update in exisiting publication
+// Access:Public
+// Method:put
+//Params:id
+//Body:updations
+
+OurAPP.put("/publication/update/:id" ,(req,res) =>{
+    const {newPublication} = req.body;
+    const {id} = req.params;
+
+    const publication = Database.Publication.forEach((publication) =>{
+        if(publication.id === parseInt(id)){
+            publication.name= newPublication.name;
+           return ;
+        }
+        return publication;
+    });
+    return res.json(Database.Publication);
+});
+
+
+// Route       /author/updateBook/:id
+// Description update/add new book to author
+// Access      Public
+// Paramteters id
+// Method      put
+
+OurAPP.put("/author/updateBook/:id", (req, res) => {
+    const { newBook } = req.body;
+    const { id } = req.params;
+    Database.Author.forEach((author) => {
+       
+        if (author.id === parseInt(id)) {
+            
+            if (!author.books.includes(newBook)) {
+               
+                author.books.push(newBook);
+               return author;
+            }
+           
+            return author;
+        }
+        return author;
+    });
+   
+    Database.Book.forEach((book) => {
+        
+        if (book.ISBN === newBook) {
+            if (!book.authors.includes(parseInt(id))) {
+                
+                book.authors.push(parseInt(id));
+                return book;
+            }
+           
+            return book;
+        }
+        return book;
+    });
+    return res.json({ book: Database.Book, author: Database.Author });
+});
+
+
+// Route       /publication/updateBook/:id
+// Description update/add new book to publiction
+// Access      Public
+// Paramteters id
+// Method      put
+
+OurAPP.put("/publication/updateBook/:id", (req, res) => {
+    const { newBook } = req.body;
+    const { id } = req.params;
+    Database.Publication.forEach((publication) => {
+       
+        if (publication.id === parseInt(id)) {
+            
+            if (!publication.books.includes(newBook)) {
+               
+                publication.books.push(newBook);
+               return publication;
+            }
+           
+            return publication;
+        }
+        return publication;
+    });
+   
+    Database.Book.forEach((book) => {
+        
+        if (book.ISBN === newBook) {
+            if (!book.publication===(parseInt(id))) {
+                
+               Database.Book.publication = parseInt(id);
+                return book;
+            }
+           
+            return book;
+        }
+        return book;
+    });
+    return res.json({ book: Database.Book, publication: Database.Publication });
+});
+
+// Route       /book/delete/:isbn
+// Description delete a book
+// Access      Public
+// Paramteters isbn
+// Method      DELETE
+OurAPP.delete("/book/delete/:isbn",(req,res)=>{
+    const { isbn } =req.params;
+
+    const filteredBook= Database.Book.filter((book)=> book.ISBN !==isbn);
+    Database.Book = filteredBook;
+    return res.json(Database.Book);
+
+});
+
+// Route       /author/delete/:id
+// Description delete a author
+// Access      Public
+// Paramteters id
+// Method      DELETE
+OurAPP.delete("/author/delete/:id",(req,res)=>{
+    const { id } =req.params;
+
+    const filteredAuthor= Database.Author.filter((author)=> author.id !== parseInt(id));
+    Database.Author = filteredAuthor;
+    return res.json(Database.Author);
+
+});
+
+// Route       /publication/delete/:id
+// Description delete a publication
+// Access      Public
+// Paramteters id
+// Method      DELETE
+OurAPP.delete("/publication/delete/:id",(req,res)=>{
+    const { id } =req.params;
+
+    const filteredPublication= Database.Publication.filter((publication) => publication.id !== parseInt(id));
+    Database.Publication = filteredPublication;
+    return res.json(Database.Publication);
+
+});
+
+// Route       /book/delete/author/:id/:isbn
+// Description delete author from book
+// Access      Public
+// Paramteters id ,isbn
+// Method      DELETE
+OurAPP.delete("/book/delete/author/:id/:isbn",(req,res)=>{
+    const { id , isbn } =req.params;
+    Database.Book.forEach((book)=>{
+        if(book.ISBN === isbn){
+            if(!book.authors.includes(parseInt(id))){
+                return book;
+            }
+            book.authors= book.authors.filter((databaseid)=> databaseid !== parseInt(id));
+            return book;
+        }
+        return book;
+    })
+    Database.Author.forEach((author) =>{
+        if(author.id === parseInt(id)){
+            if(!author.books.includes(isbn)){
+            return author;
+        }
+        author.books= author.books.filter((book)=> book!==isbn);
+        return author;
+    }
+    return author;
+});
+    return res.json({book: Database.Book ,author: Database.Author});
+});
+
+
+// Route       /publication/delete/book/:id/:isbn
+// Description delete book from publication
+// Access      Public
+// Paramteters id ,isbn
+// Method      DELETE
+OurAPP.delete("/publication/delete/book/:id/:isbn",(req,res)=>{
+    const { id , isbn } =req.params;
+    
+    Database.Book.forEach((book) =>{
+        if(book.ISBN === isbn){
+            book.publication=0;
+            return book;
+    }
+    return book;
+});
+   Database.Publication.forEach((publication)=>{
+       if(publication.id === parseInt(id)){
+           const filteredBooks= publication.books.filter(
+               (book) => {book!== isbn});
+               publication.books = filteredBooks;
+               return publication;
+       }
+       return publication;
+   });
+   return res.json({publication:Database.Publication,book:Database.Book});
+});
+
 OurAPP.listen(4000, ()=> console.log("Server is running"));

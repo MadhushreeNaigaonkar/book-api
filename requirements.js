@@ -26,11 +26,11 @@ Book
  - POST
     - to add new book -->Done
  - PUT
-    - to update book details
-    - to update/add new author
+    - to update book details -->Done
+    - to update/add new author -->DOne
  - DELETE
-    - delete a book
-    - delete an author from the book
+    - delete a book -->Done
+    - delete an author from the book -->Done
 Authors
  - GET
     - to get all authors ✅
@@ -38,11 +38,12 @@ Authors
     - to get list of author based on a book
  - POST
     - to add new author -->Done
-    - to update/add new book
+    - 
  - PUT
-    - update author details
+    - update author details-->done
+    -to update/add new book -->done
  - DELETE
-    - delete an author
+    - delete an author  --> Done
 Publication
  - GET
     - to get all publication -> [Task] 🔥 --> Done
@@ -51,9 +52,9 @@ Publication
  - POST
     - Add new publication --> Done
  - PUT
-    - update publication 
-    - to update/add new book
+    - update publication -->Done
+    - to update/add new book-->done
  - DELETE
-    - delete a book from publication
-    - delete a publication
+    - delete a book from publication-->done
+    - delete a publication  --> Done
 */
